@@ -1,3 +1,4 @@
+import ScreenShake from '../utils/screenShake.js';
 export default class Enemy{
     constructor(x, y, width=50, height=50, game){
         this.x = x;
@@ -38,7 +39,7 @@ export default class Enemy{
     }
     draw(ctx){
         ctx.save();
-        ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+        ctx.translate(this.x + this.game.shakeX + this.width / 2, this.y + this.game.shakeY + this.height / 2);
         ctx.fillStyle = 'red';
         ctx.rotate(this.angle);
         ctx.fillRect(0, 0, this.width, this.height);
@@ -50,9 +51,13 @@ export default class Enemy{
                 const deltaX=bullet.x-this.x;
                 const deltaY=bullet.y-this.y;
                 if(Math.hypot(deltaX,deltaY)<this.width/2+bullet.radius){
+                    this.game.effects.push(new ScreenShake(this.width/2.5,-0.90,3,this.game));
+                    bullet.destroy();
                     this.deleteThis();
                 }
                 
+            }else{
+                bullet.destroy();
             }
 
         })
